@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Allow: /post/
+Allow: /images/
+Allow: /img/
+Allow: /about/
+Allow: /archives/
+Allow: /categories/
+Allow: /tags/
+Allow: /css/
+Allow: /js/
+
+# 提供 Sitemap 文件位置
+Sitemap: https://david31009.github.io/sitemap.xml
