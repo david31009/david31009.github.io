@@ -1,0 +1,239 @@
+<!DOCTYPE html><html lang="zh-TW" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>從工程師的角度看待廣告 Part1 - 事件篇 | 雜耍特技師</title><meta name="author" content="David"><meta name="copyright" content="David"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前言菜鳥工程師剛進入廣告投放業，對於廣告投放在做甚麼，可說是一點都不了解。光是搞懂廣告的 domain knowledge 可能就要花一段時間。本篇文章將分享透過工程師的角度看待廣告投放工程，以及介紹日常廣告後台相關的疑難雜症，但不會琢磨於更深層的廣告知識及策略，比較著重技術上的實作觀念。。 廣告工程概念介紹了解廣告前，可能要先了解廣告中的一些重要的角色，如  廣告代理商 廣告商 ( 如: Goo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="從工程師的角度看待廣告 Part1 - 事件篇">
+<meta property="og:url" content="https://david31009.github.io/post/ad/events/index.html">
+<meta property="og:site_name" content="雜耍特技師">
+<meta property="og:description" content="前言菜鳥工程師剛進入廣告投放業，對於廣告投放在做甚麼，可說是一點都不了解。光是搞懂廣告的 domain knowledge 可能就要花一段時間。本篇文章將分享透過工程師的角度看待廣告投放工程，以及介紹日常廣告後台相關的疑難雜症，但不會琢磨於更深層的廣告知識及策略，比較著重技術上的實作觀念。。 廣告工程概念介紹了解廣告前，可能要先了解廣告中的一些重要的角色，如  廣告代理商 廣告商 ( 如: Goo">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://david31009.github.io/post/ad/events/cover.webp">
+<meta property="article:published_time" content="2024-07-29T15:32:09.000Z">
+<meta property="article:modified_time" content="2025-11-21T09:42:16.222Z">
+<meta property="article:author" content="David">
+<meta property="article:tag" content="Meta">
+<meta property="article:tag" content="廣告投放">
+<meta property="article:tag" content="Google Ads">
+<meta property="article:tag" content="事件">
+<meta property="article:tag" content="event">
+<meta property="article:tag" content="gtag">
+<meta property="article:tag" content="fbq">
+<meta property="article:tag" content="廣告">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://david31009.github.io/post/ad/events/cover.webp"><link rel="shortcut icon" href="/images/home_page/favicon.webp"><link rel="canonical" href="https://david31009.github.io/post/ad/events/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//www.google-analytics.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="E89DAusjlVZlMkYjDUdoC3aijA-J2cx_P61fboUIqos"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-1717845563062851',
+  enable_page_level_ads: 'true'
+});</script><script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-47XL54Q6DC"></script><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-47XL54Q6DC');
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '複製成功',
+    error: '複製錯誤',
+    noSupport: '瀏覽器不支援'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '剛剛',
+    min: '分鐘前',
+    hour: '小時前',
+    day: '天前',
+    month: '個月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '載入更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '從工程師的角度看待廣告 Part1 - 事件篇',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-11-21 09:42:16'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="icon" href="/favicon.ico" type="image/x-icon"><meta name="generator" content="Hexo 7.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/home_page/avatar.webp" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">標籤</div><div class="length-num">101</div></a><a href="/categories/"><div class="headline">分類</div><div class="length-num">4</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-newspaper"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 標籤</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 關於</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/shared/tech.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="雜耍特技師"></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-newspaper"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 標籤</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 關於</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">從工程師的角度看待廣告 Part1 - 事件篇</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">發表於</span><time class="post-meta-date-created" datetime="2024-07-29T15:32:09.000Z" title="發表於 2024-07-29 15:32:09">2024-07-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新於</span><time class="post-meta-date-updated" datetime="2025-11-21T09:42:16.222Z" title="更新於 2025-11-21 09:42:16">2025-11-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BB%A3%E5%91%8A%E6%8A%95%E6%94%BE%E5%B7%A5%E7%A8%8B/">廣告投放工程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="從工程師的角度看待廣告 Part1 - 事件篇"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">閱讀量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>菜鳥工程師剛進入廣告投放業，對於廣告投放在做甚麼，可說是一點都不了解。光是搞懂廣告的 domain knowledge 可能就要花一段時間。本篇文章將分享透過工程師的角度看待廣告投放工程，以及介紹日常廣告後台相關的疑難雜症，但不會琢磨於更深層的廣告知識及策略，比較著重技術上的實作觀念。。</p>
+<h3 id="廣告工程概念介紹"><a href="#廣告工程概念介紹" class="headerlink" title="廣告工程概念介紹"></a>廣告工程概念介紹</h3><p>了解廣告前，可能要先了解廣告中的一些重要的角色，如</p>
+<ol>
+<li><font color=#339cff >廣告代理商</font></li>
+<li><font color=#339cff >廣告商</font> ( 如: Google, Meta )</li>
+</ol>
+<p>以電商來說，在投廣告的過程中，可能會發現自己投的成效不是那麼好，所以會找廣告代理商的協助。廣告代理商通常會蒐集、並分析使用者的行為等數據，以製定投遞廣告的策略，來提升廣告投放的成效。</p>
+<p>關於廣告的成效，個人認為比較黑盒子一點，因為我們不知道廣告商內部競價的演算法，所以只能靠廣告商提供的成效數字，如<strong>轉換率</strong>、<strong>轉換次數</strong>等，來判定廣告的成效。</p>
+<p>也就是說，透過這些廣告成效的數字，不斷修正廣告投遞的模式，最後形成一套所謂的「<font color=#ff335b>廣告投遞策略</font>」，之後在投廣告時，可以依循這樣的策略及經驗，保持一致的廣告成效。</p>
+<h3 id="網站發送事件"><a href="#網站發送事件" class="headerlink" title="網站發送事件"></a>網站發送事件</h3><p>在廣告投遞的過程，透過事件的發送可以更了解使用者的行為。但是發送事件並不是必須，只是有做網頁事件可以提升廣告成效。</p>
+<p>舉例來說，廣告代理商會埋程式碼在要追蹤的網站中，如果消費者有瀏覽某個商品頁面，就會觸發「瀏覽商品」的事件。<font style="background: #f7dc6f">事件會送到廣告商的伺服器</font>，因此，我們可以在廣告後台看到事件發送的情況。</p>
+<p>例如，某商品的瀏覽量較多，就代表廣告後台收到「瀏覽商品」的事件數量較多。根據這樣的數據，可以推測這個商品比較熱門，因此，投廣告的策略，就可以針對這個商品多下一些廣告。</p>
+<ul>
+<li><p>以下圖片是 Google 廣告商的後台 Google Analytics 4 ( 以下簡稱 GA4 ) 所蒐集到的「瀏覽商品」的事件 ( view_item )，我們可以觀察每個商品，在一個期間內收到的 view_item 事件數量，以及瀏覽的人數。</p>
+<p><img src="/post/ad/events/view-item-event-example.webp" alt="GA4 view item 事件"></p>
+</li>
+<li><p>GA4 中，我們也可以自己拉報表 ( <font color=#ff335b>探索報表</font> )，觀察更詳細的狀況。下圖是某產品，在 8&#x2F;3 ~ 8&#x2F;7 內的各個事件的活躍使用者、工作階段等。</p>
+<p><img src="/post/ad/events/product-view-item.webp" alt="探索報表某商品事件統計"></p>
+</li>
+</ul>
+<h3 id="Base-code-和-PageView-事件"><a href="#Base-code-和-PageView-事件" class="headerlink" title="Base code 和 PageView 事件"></a>Base code 和 PageView 事件</h3><p>要怎麼把事件的發送到廣告商的 server，其實廣告商都幫你準備好了。以 Meta 為例，只要把它提供的 <a target="_blank" rel="noopener" href="https://developers.facebook.com/docs/meta-pixel/get-started#base-code">基底碼 ( base code )</a>，埋進網站，就完成初始化設定了。大部分的廣告商都是依循著這樣的邏輯發送事件，Meta 基底碼如下:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Facebook Pixel Code --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">  !<span class="keyword">function</span>(<span class="params">f,b,e,v,n,t,s</span>)</span></span><br><span class="line"><span class="language-javascript">  &#123;<span class="keyword">if</span>(f.<span class="property">fbq</span>)<span class="keyword">return</span>;n=f.<span class="property">fbq</span>=<span class="keyword">function</span>(<span class="params"></span>)&#123;n.<span class="property">callMethod</span>?</span></span><br><span class="line"><span class="language-javascript">  n.<span class="property">callMethod</span>.<span class="title function_">apply</span>(n,<span class="variable language_">arguments</span>):n.<span class="property">queue</span>.<span class="title function_">push</span>(<span class="variable language_">arguments</span>)&#125;;</span></span><br><span class="line"><span class="language-javascript">  <span class="keyword">if</span>(!f.<span class="property">_fbq</span>)f.<span class="property">_fbq</span>=n;n.<span class="property">push</span>=n;n.<span class="property">loaded</span>=!<span class="number">0</span>;n.<span class="property">version</span>=<span class="string">&#x27;2.0&#x27;</span>;</span></span><br><span class="line"><span class="language-javascript">  n.<span class="property">queue</span>=[];t=b.<span class="title function_">createElement</span>(e);t.<span class="property">async</span>=!<span class="number">0</span>;</span></span><br><span class="line"><span class="language-javascript">  t.<span class="property">src</span>=v;s=b.<span class="title function_">getElementsByTagName</span>(e)[<span class="number">0</span>];</span></span><br><span class="line"><span class="language-javascript">  s.<span class="property">parentNode</span>.<span class="title function_">insertBefore</span>(t,s)&#125;(<span class="variable language_">window</span>, <span class="variable language_">document</span>,<span class="string">&#x27;script&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">  <span class="string">&#x27;https://connect.facebook.net/en_US/fbevents.js&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">fbq</span>(<span class="string">&#x27;init&#x27;</span>, <span class="string">&#x27;&#123;your-pixel-id-goes-here&#125;&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">  <span class="title function_">fbq</span>(<span class="string">&#x27;track&#x27;</span>, <span class="string">&#x27;PageView&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">noscript</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">img</span> <span class="attr">height</span>=<span class="string">&quot;1&quot;</span> <span class="attr">width</span>=<span class="string">&quot;1&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display:none&quot;</span> </span></span><br><span class="line"><span class="tag">      <span class="attr">src</span>=<span class="string">&quot;https://www.facebook.com/tr?id=&#123;your-pixel-id-goes-here&#125;&amp;ev=PageView&amp;noscript=1&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">noscript</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- End Facebook Pixel Code --&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意，在 base code 中，這一行 <code>fbq(&#39;init&#39;, &#39;&#123;your-pixel-id-goes-here&#125;&#39;);</code> 要改成自己的 meta pixel，基本上就完成了。</p>
+<p>另外，值得觀察的是 <code>fbq(&#39;track&#39;, &#39;PageView&#39;);</code>，除了 init 初始化，<font style="background: #f7dc6f">PageView 是在初始化都會觸發的事件</font>。也就是說，如果一個網站，都有確實埋入 base code，每個頁面都會觸發 PageView 事件。</p>
+<p>PageView 事件不但可以當作觀察使用者的瀏覽量，也可以當作 base code 是否有正確埋設的檢查。檢查方式可以透過 <a target="_blank" rel="noopener" href="https://chromewebstore.google.com/detail/meta-pixel-helper/fdgfkebogiimcoedlicjlajpkdmockpc?hl=en&gl=US&authuser=1&pli=1">Meta pixel helper</a>，它是 chrome 的一個插件，如果正確埋設，載入網頁後點擊 Meta pixel helper，可以看到你的像素是否觸發 PageView 事件。</p>
+<p>以下圖為例，如果對應的像素有觸發 PageView 事件，代表有埋設成功，而且一個網站可以埋設多個 pixel，不限一個。詳細流程可以參考 <a target="_blank" rel="noopener" href="https://developers.facebook.com/docs/meta-pixel/support/pixel-helper/">官方文件</a> 說明。</p>
+<p><img src="/post/ad/events/meta-pixel-helper.webp" alt="探索報表某商品事件統計"></p>
+<h3 id="標準事件"><a href="#標準事件" class="headerlink" title="標準事件"></a>標準事件</h3><p>根據不同的廣告商，可能會有不同的事件命名，但基本上是大同小異。以 Meta 為例，常見的標準事件，可以從消費者的購物流程來理解。</p>
+<p>消費者購物時，通常會先「<font color=#ff335b>瀏覽商品 ( ViewContent )</font>」。接著點擊「<font color=#ff335b>加入購物車 ( AddToCart )</font>」按鈕。到了結帳頁，就會觸發「<font color=#ff335b>開始結帳 ( InitiateCheckout )</font>」事件。最後，購買商品，會有「<font color=#ff335b>購買 ( Purchase )</font>」事件。以上是最常見的標準事件，<font style="background: #f7dc6f">基本上各個廣告渠道都會有</font>。</p>
+<p>當然，還有其他的標準事件，詳細可參考 <a target="_blank" rel="noopener" href="https://developers.facebook.com/docs/meta-pixel/reference">Meta 官方文件</a>，其他常見的標準事件，包含:</p>
+<ul>
+<li>AddToWishlist</li>
+<li>CompleteRegistration</li>
+<li>Contact</li>
+<li>Lead</li>
+<li>Search</li>
+<li>AddPaymentInfo</li>
+<li>…</li>
+</ul>
+<p>比較要注意的是，有些標準事件 Meta 沒有，但是 Google 卻是有的，例如: Google 標準事件有 add_shipping_info，用來追蹤消費者的運送資訊，但是 Meta 是沒有的。所以在設定事件上要特別注意，這裡也附上 <a target="_blank" rel="noopener" href="https://developers.google.com/analytics/devguides/collection/ga4/reference/events?hl=zh-tw&client_type=gtag">Google 官方文件</a>。</p>
+<h3 id="自訂事件"><a href="#自訂事件" class="headerlink" title="自訂事件"></a>自訂事件</h3><p>除了標準事件，也可以透過「<font color=#ff335b>自訂事件</font>」來追蹤使用者的行為。例如，如果想要追蹤網頁上一個報名的按鈕，但他不是標準事件，此時就可以發送自訂事件，事件名稱需要自訂，比如說「按下報名按鈕」。自訂事件在大部分的廣告渠道也都是有的。</p>
+<p>需要注意的是，有些廣告渠道是不允許中文的事件名稱，像是 line 渠道，它對自訂事件的限制較嚴格，只能 20 字內的英文或數字，以下是 <a target="_blank" rel="noopener" href="https://help2.line.me/admanager_tw/web/?contentId=20016940">line 官方</a> 對於自訂事件的限制:</p>
+<blockquote>
+<p>活動名稱「CustomEvent」<br>自訂事件代碼內「CustomEvent」的部分將顯示管理畫面的活動名稱，可自由設定20字以內的英數字</p>
+</blockquote>
+<h3 id="事件發送-程式碼範例"><a href="#事件發送-程式碼範例" class="headerlink" title="事件發送 - 程式碼範例"></a>事件發送 - 程式碼範例</h3><p>因為已經埋過 base code 了，之後標準事件與自訂事件的發送都可以用 <code>fbq(&#39;track&#39;)</code> 這個函式來發送。每個事件可以帶的參數不同。</p>
+<p>以「購買」事件來說，在 <a target="_blank" rel="noopener" href="https://developers.facebook.com/docs/meta-pixel/reference">官方文件</a> 有列出可以帶的參數，如下列表。</p>
+<table>
+<thead>
+<tr>
+<th align="left">事件</th>
+<th align="left">事件說明</th>
+<th align="left">物件屬性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Purchase</td>
+<td align="left">進行購買或完成結帳流程時。<br><br>有人完成購買或結帳流程，並進入感謝或確認頁面。</td>
+<td align="left">content_ids、content_type、contents、<br>currency、num_items、value<br><br><strong>必要項目</strong>：currency 和 value<br><br>高效速成 + 目錄廣告的必要項目：contents 或 content_ids</td>
+</tr>
+</tbody></table>
+<p>發送事件的方式，<a target="_blank" rel="noopener" href="https://developers.facebook.com/docs/meta-pixel/implementation/conversion-tracking#standard-events">官方文件</a> 說明的很清楚，基本上就是像下面的方式發送，帶入必要的「幣值」跟「價值」即可。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">fbq</span>(<span class="string">&#x27;track&#x27;</span>, <span class="string">&#x27;Purchase&#x27;</span>, &#123;<span class="attr">currency</span>: <span class="string">&quot;USD&quot;</span>, <span class="attr">value</span>: <span class="number">30.00</span>&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>如果是「自訂事件」的話，可以透過 <code>fbq(&#39;trackCustom&#39;)</code> 函式來追蹤，事件名稱可以隨意取，如 ShareDiscount，帶入的參數需用 json 物件包裝。注意， meta 自訂事件的限制是，50 字元內，中英皆可。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">fbq</span>(<span class="string">&#x27;trackCustom&#x27;</span>, <span class="string">&#x27;ShareDiscount&#x27;</span>, &#123;<span class="attr">promotion</span>: <span class="string">&#x27;share_discount_10%&#x27;</span>&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>之後，也會有商品目錄相關的 <a href="https://david31009.github.io/post/ad/catalog">文章</a>，可以一起參考。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://david31009.github.io">David</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章連結: </span><span class="post-copyright-info"><a href="https://david31009.github.io/post/ad/events/">https://david31009.github.io/post/ad/events/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版權聲明: </span><span class="post-copyright-info">本部落格所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 許可協議。轉載請註明來自 <a href="https://david31009.github.io" target="_blank">雜耍特技師</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Meta/">Meta</a><a class="post-meta__tags" href="/tags/%E5%BB%A3%E5%91%8A%E6%8A%95%E6%94%BE/">廣告投放</a><a class="post-meta__tags" href="/tags/Google-Ads/">Google Ads</a><a class="post-meta__tags" href="/tags/%E4%BA%8B%E4%BB%B6/">事件</a><a class="post-meta__tags" href="/tags/event/">event</a><a class="post-meta__tags" href="/tags/gtag/">gtag</a><a class="post-meta__tags" href="/tags/fbq/">fbq</a><a class="post-meta__tags" href="/tags/%E5%BB%A3%E5%91%8A/">廣告</a></div><div class="post_share"><div class="social-share" data-image="/post/ad/events/cover.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/hexo-google-services/" title="如何靠部落格流量賺廣告費 - 加入 Google Analytics 4 和 Google Adsense 吧"><img class="cover" src="/post/hexo-google-services/cover.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">如何靠部落格流量賺廣告費 - 加入 Google Analytics 4 和 Google Adsense 吧</div></div></a></div><div class="next-post pull-right"><a href="/post/fastapi-uvicorn-reload/" title="使用 Uvicorn 監聽 FastAPI 框架的 web server，但是 reload 卻失效?"><img class="cover" src="/post/fastapi-uvicorn-reload/cover.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">使用 Uvicorn 監聽 FastAPI 框架的 web server，但是 reload 卻失效?</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相關推薦</span></div><div class="relatedPosts-list"><div><a href="/post/ad/catalog/" title="從工程師的角度看待廣告 Part2 - 商品目錄篇"><img class="cover" src="/post/ad/catalog/cover.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-02</div><div class="title">從工程師的角度看待廣告 Part2 - 商品目錄篇</div></div></a></div><div><a href="/post/meta-video-catalog/" title="Meta 商品目錄新增影片實作 - video[0].url 到底是甚麼?"><img class="cover" src="/post/meta-video-catalog/cover.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-28</div><div class="title">Meta 商品目錄新增影片實作 - video[0].url 到底是甚麼?</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/home_page/avatar.webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">David</div><div class="author-info__description">為自己的歷程留下紀錄</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">標籤</div><div class="length-num">101</div></a><a href="/categories/"><div class="headline">分類</div><div class="length-num">4</div></a></div><a id="card-info-btn" href="https://david31009.github.io/about"><i class="fas fa-user"></i><span>About Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/david31009" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:lifewithtechs@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://github.com/david31009" target="_blank" title="Line"><i class="fab fa-line" style="color: #00b900;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目錄</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%A3%E5%91%8A%E5%B7%A5%E7%A8%8B%E6%A6%82%E5%BF%B5%E4%BB%8B%E7%B4%B9"><span class="toc-number">2.</span> <span class="toc-text">廣告工程概念介紹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B6%B2%E7%AB%99%E7%99%BC%E9%80%81%E4%BA%8B%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">網站發送事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Base-code-%E5%92%8C-PageView-%E4%BA%8B%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">Base code 和 PageView 事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%99%E6%BA%96%E4%BA%8B%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">標準事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E8%A8%82%E4%BA%8B%E4%BB%B6"><span class="toc-number">6.</span> <span class="toc-text">自訂事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E7%99%BC%E9%80%81-%E7%A8%8B%E5%BC%8F%E7%A2%BC%E7%AF%84%E4%BE%8B"><span class="toc-number">7.</span> <span class="toc-text">事件發送 - 程式碼範例</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/leetcode/28/find-the-index-of-the-first-occurrence-in-a-string/" title="leetcode-28-find-the-index-of-the-first-occurrence-in-a-string"><img src="/post/leetcode/28/find-the-index-of-the-first-occurrence-in-a-string/cover.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode-28-find-the-index-of-the-first-occurrence-in-a-string"/></a><div class="content"><a class="title" href="/post/leetcode/28/find-the-index-of-the-first-occurrence-in-a-string/" title="leetcode-28-find-the-index-of-the-first-occurrence-in-a-string">leetcode-28-find-the-index-of-the-first-occurrence-in-a-string</a><time datetime="2025-07-06T19:40:32.000Z" title="發表於 2025-07-06 19:40:32">2025-07-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/leetcode/6/zigzag-conversion/" title="leetcode-6-zigzag-conversion"><img src="/post/leetcode/6/zigzag-conversion/cover.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode-6-zigzag-conversion"/></a><div class="content"><a class="title" href="/post/leetcode/6/zigzag-conversion/" title="leetcode-6-zigzag-conversion">leetcode-6-zigzag-conversion</a><time datetime="2025-07-06T14:48:17.000Z" title="發表於 2025-07-06 14:48:17">2025-07-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/leetcode/151/reverse-words-in-a-string/" title="leetcode-151-reverse-words-in-a-string"><img src="/post/leetcode/151/reverse-words-in-a-string/cover.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode-151-reverse-words-in-a-string"/></a><div class="content"><a class="title" href="/post/leetcode/151/reverse-words-in-a-string/" title="leetcode-151-reverse-words-in-a-string">leetcode-151-reverse-words-in-a-string</a><time datetime="2025-06-30T22:34:50.000Z" title="發表於 2025-06-30 22:34:50">2025-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/leetcode/14/longest-common-prefix/" title="leetcode-14-longest-common-prefix"><img src="/post/leetcode/14/longest-common-prefix/cover.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode-14-longest-common-prefix"/></a><div class="content"><a class="title" href="/post/leetcode/14/longest-common-prefix/" title="leetcode-14-longest-common-prefix">leetcode-14-longest-common-prefix</a><time datetime="2025-06-29T23:05:57.000Z" title="發表於 2025-06-29 23:05:57">2025-06-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/leetcode/58/length-of-last-word/" title="leetcode-58-length-of-last-word"><img src="/post/leetcode/58/length-of-last-word/cover.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode-58-length-of-last-word"/></a><div class="content"><a class="title" href="/post/leetcode/58/length-of-last-word/" title="leetcode-58-length-of-last-word">leetcode-58-length-of-last-word</a><time datetime="2025-06-25T15:41:48.000Z" title="發表於 2025-06-25 15:41:48">2025-06-25</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By David</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主題 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">All Rights Rserved</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="閱讀模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="簡繁轉換">繁</button><button id="darkmode" type="button" title="淺色和深色模式轉換"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="單欄和雙欄切換"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="設定"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目錄"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="返回頂部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="/js/tw_cn.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
